@@ -277,36 +277,157 @@ clip-path: polygon(0 0, 0 0, 0 0, 0 0);
 </div>
 ```
 
-### 11. let、const、var 的区别有哪些？
+## 四、如何实现div垂直居中
 
-声明方式变量提升暂时性死区重复声明块作用域有效初始值重新赋值var会不存在允许不是非必须允许let不会存在不允许是非必须允许const不会存在不允许是必须不允许
+### 不定高的情况：父盒子有宽高
 
-1.let/const 定义的变量不会出现变量提升，而 var 定义的变量会提升。
+#### **1 使用Flex**
 
-2.相同作用域中，let 和 const 不允许重复声明，var 允许重复声明。
+只需要在父盒子设置：display: flex; justify-content: center;align-items: center;
 
-3.const 声明变量时必须设置初始值
+#### **2 使用 CSS3 transform**
 
-4.const 声明一个只读的常量，这个常量不可改变。
+父盒子设置:position:relative
 
-这里有一个非常重要的点即是：在JS中，复杂数据类型，存储在栈中的是堆内存的地址，存在栈中的这个地址是不变的，但是存在堆中的值是可以变得。有没有相当常量指针/指针常量~
+Div 设置: transform: translate(-50%，-50%);position: absolute;top: 50%;left: 50%;
 
-```js
-const a = 20;
-const b = {
-    age: 18,
-    star: 500
+#### **3 使用 display:table-cell 方法**
+
+父盒子设置:display:table-cell; text-align:center;vertical-align:middle;
+
+Div 设置: display:inline-block;vertical-align:middle;
+
+### 子盒子有宽高
+
+#### 1.absolute + margin负值
+
+这种方法需要手动设置文本元素的高度，然后将其绝对定位设置为 `top: 50%` 之后，再设置`margin-top: -1/2文本高度`。注意这里只要让`margin-top`的值始终是`1/2文本高度`即可，用什么单位不限（px，% ，…）。
+
+```html
+<div class="outer">
+    <div class="inner">
+        <p>多行文字垂直居中</p>
+        <p>多行文字垂直居中</p>
+    </div>
+</div>
+
+.outer {
+* position: relative;
+  width: 500px;
+  height: 200px;
+  background: #ddd;
 }
+
+.inner {
+* position: absolute;
+* top: 50%;
+* height: 80px;       /* 这里px可以换成其他单位 */
+* margin-top: -40px;  /* 这里px可以换成其他单位 */
+  background: #aaa;
+}
+
 ```
 
-一图胜万言，如下图所示，不变的是栈内存中 a 存储的 20，和 b 中存储的 0x0012ff21（瞎编的一个数字）。而 {age: 18, star: 200} 是可变的。
+#### 2.absolute + margin: auto
+
+当元素设置为position: absolute之后，margin: auto 就会失效。但是当同时设置 top 和 bottom时，又会生效。多么神奇鸭~ 所以这里只需要将 top 和 bottom 设置为一个相等的值，就能让文本垂直居中了。同理，left 和 right 设置为相等的值，也会让其水平居中。
 
 
+```css
+<div class="outer">
+    <div class="inner">
+        <p>多行文字垂直居中</p>
+        <p>多行文字垂直居中</p>
+    </div>
+</div>
+.outer {
+* position: relative;
+  width: 500px;
+  height: 300px;
+  background: #ddd;
+}
 
-![img](https://pic4.zhimg.com/80/v2-7e90481f860aa865aadac3a762e485e3_hd.jpg)
+.inner {
+* position: absolute;
+* top: 0;
+* bottom: 0;
+* left: 0;
+* right: 0;
+* height: 80px;
+* margin: auto;
+  background: #aaa;
+}
 
+```
 
-  
+#### 3.::before + inline-block + vertical-align: middel （推荐）
 
+这种方法将::before伪元素设定为height: 100%、inline-block，再搭配上将需要居中的子元素同样设置成inline-block性质后，就能使用vertical-align:middle来达到垂直居中的目的了。
 
+```css
+.outer {
+  width: 500px;
+  height: 300px;
+  background: #ddd;
+}
+
+.outer::before {
+  content: '';
+* display: inline-block;
+* height: 100%;
+* vertical-align: middle;
+}
+
+.inner {
+* display: inline-block;
+* vertical-align: middle;
+  background: #aaa;
+}
+
+```
+
+#### 4.absolute + translate （推荐）
+
+`transform` 中的 `translate` 是相对于元素自身偏移的，所以将 `top: 50%` 的绝对定位元素，相对自身向上偏移`50%`即可。
+
+```css
+.outer {
+* position: relative;
+  width: 300px;
+  height: 300px;
+  background: #ccc;
+}
+
+.inner {
+* position: absolute;
+* top: 50%;
+* transform: translate(0, -50%);
+  background: #aaa;
+}
+
+```
+
+## 五、从输入URL到页面展示的详细过程
+
+- 1、输入网址
+
+  跳转查看本地 缓存本地有无
+
+- 2、DNS解析
+
+  查找DNS域名 找到IP地址
+
+- 3、建立tcp连接
+
+  tcp的三次握手
+
+- 4、客户端发送HTPP请求
+
+- 5、服务器处理请求
+
+- 6、服务器响应请求
+
+- 7、浏览器展示HTML
+
+- 8、浏览器发送请求获取其他在HTML中的资源。
 

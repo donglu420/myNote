@@ -472,7 +472,13 @@ console.log(iter.next()); //{ value: 3, done: false }
 
 ### 参考回答：
 
-JS的基本数据类型有字符串，数字，布尔，数组，对象，Null，Undefined,基本数据类型是按值访问的，也就是说我们可以操作保存在变量中的实际的值，
+JS的基本数据类型有:Undefined  ,  Null , Boolean, number,基本数据类型是按值访问的，也就是说我们可以操作保存在变量中的实际的值
+
+引用数据类型（按引用访问）：object、array、function
+
+typeof 能返回 Undefined  ,  Null , Boolean, number,  string, object(对象，数组和null都是object)
+
+instanceof 用于检测引用类型：所有引用类型都是object的实例，数组是Array的实例
 
 基本数据类型和引用数据类型的区别如下：
 
@@ -504,13 +510,17 @@ with关键字：通常被当做重复引用同一个对象的多个属性的快�
 
 
 
-undefined与null：目前null和undefined基本是同义的，只有一些细微的差别，null表示没有对象，undefined表示缺少值，就是此处应该有一个值但是还没有定义，因此undefined==null返回false
+undefined与null：目前null和undefined基本是同义的，只有一些细微的差别，
+
+javaScript高级程序设计： 在使用var声明变量但未对其加以初始化时，这个变量的值就是undefined。   null值则是表示空对象指针。，就是此处应该有一个值但是还没有定义，因此undefined==null返回false
+
+undefined是访问一个未初始化的变量时返回的值，而null是访问一个尚未存在的对象时所返回的值。因此，可以把undefined看作是空的变量，而null看作是空的对象。
 
 此外了解== 和===的区别：
 
 在做==比较时。不同类型的数据会先转换成一致后在做比较，===中如果类型不一致就直接返回false，一致的才会比较
 
-类型判断函数，使用typeof即可，首先判断是否为null，之后用typeof哦按段，如果是object的话，再用array.isarray判断是否为数组，如果是数字的话用isNaN判断是否是NaN即可
+类型判断函数，使用typeof即可，首先判断是否为null，之后用typeof，如果是object的话，再用array.isarray判断是否为数组，如果是数字的话用isNaN判断是否是NaN即可
 扩展学习：
 
 JS采用的是词法作用域，也就是静态作用域，所以函数的作用域在函数定义的时候就决定了，
@@ -2504,3 +2514,32 @@ function uniq(arry) {
     return result;
 }
 ```
+
+## 二十、1. let、const、var 的区别有哪些？
+
+声明方式变量提升暂时性死区重复声明块作用域有效初始值重新赋值var会不存在允许不是非必须允许let不会存在不允许是非必须允许const不会存在不允许是必须不允许
+
+### 1.let/const 定义的变量不会出现变量提升，而 var 定义的变量会提升。
+
+### 2.相同作用域中，let 和 const 不允许重复声明，var 允许重复声明。
+
+### 3.const 声明变量时必须设置初始值
+
+### 4.const 声明一个只读的常量，这个常量不可改变。
+
+这里有一个非常重要的点即是：在JS中，复杂数据类型，存储在栈中的是堆内存的地址，存在栈中的这个地址是不变的，但是存在堆中的值是可以变得。有没有相当常量指针/指针常量~
+
+```js
+const a = 20;
+const b = {
+    age: 18,
+    star: 500
+}
+```
+
+一图胜万言，如下图所示，不变的是栈内存中 a 存储的 20，和 b 中存储的 0x0012ff21（瞎编的一个数字）。而 {age: 18, star: 200} 是可变的。
+
+
+
+![img](https://pic4.zhimg.com/80/v2-7e90481f860aa865aadac3a762e485e3_hd.jpg)
+
